@@ -1,0 +1,30 @@
+<div class="form-builder">
+  <h2>Drag & Drop Form Builder</h2>
+
+  <button (click)="addField('text')">Add Text Field</button>
+  <button (click)="addField('checkbox')">Add Checkbox</button>
+  <button (click)="addField('dropdown')">Add Dropdown</button>
+  <button (click)="addField('radio')">Add Radio</button>
+  <button (click)="addField('date')">Date</button>
+
+  <div cdkDropList (cdkDropListDropped)="drop($event)"> 
+    <form [formGroup]="formGroup">
+      <div *ngFor="let field of fields; let i = index" cdkDrag>
+        <label>{{ field.label }}</label>
+        <input *ngIf="field.type === 'text'" formControlName="field_{{i}}" />
+        <div *ngIf="formGroup.get('field_' + i)?.invalid && formGroup.get('field_' + i)?.touched">
+          <small *ngIf="formGroup.get('field_' + i)?.errors?.['required']">This field is required.</small>
+        </div>
+        <input *ngIf="field.type === 'radio'" type="radio" formControlName="field_{{i}}" />
+        <input *ngIf="field.type === 'checkbox'" type="checkbox" formControlName="field_{{i}}" />
+        <select *ngIf="field.type === 'dropdown'" formControlName="field_{{i}}">
+          <option *ngFor="let option of fields" [value]="option">{{ option.label }}</option>
+        </select>
+        <input *ngIf="field.type === 'date'" type="date" formControlName="field_{{i}}" />
+      </div>
+    </form>
+  </div>
+
+  <button (click)="saveForm()">Save Form</button>
+  <button (click)="submitForm()">Submit Form</button>
+</div>
